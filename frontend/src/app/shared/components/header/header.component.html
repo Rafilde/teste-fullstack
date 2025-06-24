@@ -1,0 +1,16 @@
+<div class="sidebar" [class.hidden]="!sidebarOpen">
+  <button class="close-btn" (click)="toggleSidebar()">×</button>
+  <a href="/dashboard" class="sidebar-link">Dashboard</a>
+  <a href="/planos" class="sidebar-link">Planos</a>
+  <a href="/beneficiarios" class="sidebar-link">Beneficiários</a>
+  <a href="#" class="sidebar-link" (click)="logout()">Sair</a>
+</div>
+
+<div class="main-content" [class.full-width]="!sidebarOpen">
+  <div class="header">
+    <button class="open-btn" (click)="toggleSidebar()">☰</button>
+    <div class="container">
+      <h1>UNIMED</h1>
+    </div>
+  </div>
+</div>

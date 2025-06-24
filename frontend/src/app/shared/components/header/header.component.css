@@ -1,0 +1,85 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f1f5f9;
+  margin: 0;
+}
+
+.sidebar {
+  width: 220px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  padding-top: 20px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.hidden {
+  transform: translateX(-100%);
+}
+
+.main-content {
+  margin-left: 220px;
+  transition: margin-left 0.3s;
+}
+
+.full-width {
+  margin-left: 0;
+}
+
+.header {
+  background-color: #006644;
+  color: #f9f9f9;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.open-btn,
+.close-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: #f9f9f9;
+  cursor: pointer;
+  margin-right: 12px;
+  padding: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.close-btn {
+  color: #1e293b;
+  font-size: 22px;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+}
+
+.container h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #e2f0e3;
+  color: var(--primary-color);
+  font-weight: 500;
+}
