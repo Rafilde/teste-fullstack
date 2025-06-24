@@ -1,1 +1,157 @@
-<p>auth works!</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-left">
+      <div class="auth-overlay">
+        <h1>
+          Gerencie seus <span class="highlight">Beneficiários e Planos</span>
+        </h1>
+        <p>
+          Cadastre e acompanhe os beneficiários e seus planos com praticidade e
+          segurança na plataforma Unimed.
+        </p>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-form-wrapper">
+        <div class="auth-form">
+          <h1>{{ isLogin ? "Faça seu login" : "Crie sua conta" }}</h1>
+          <p>
+            {{
+              isLogin
+                ? "Acesse sua conta e continue seus estudos"
+                : "Preencha os dados abaixo para começar"
+            }}
+          </p>
+
+          <form (ngSubmit)="handleSubmit()" #authForm="ngForm">
+            <!-- LOGIN -->
+            <div *ngIf="isLogin">
+              <div class="input-group">
+                <label for="cadastroEmail">Email</label>
+                <input
+                  type="email"
+                  id="cadastroEmail"
+                  name="cadastroEmail"
+                  [(ngModel)]="email"
+                  required
+                  email
+                  #emailInput="ngModel"
+                />
+                <div
+                  *ngIf="emailInput.invalid && emailInput.touched"
+                  class="error-message"
+                >
+                  Por favor, insira um email válido.
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="senha">Senha</label>
+                <input
+                  type="password"
+                  id="senha"
+                  name="senha"
+                  [(ngModel)]="senha"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- CADASTRO -->
+            <div *ngIf="!isLogin">
+              <div class="input-group">
+                <label for="nome">Nome Completo</label>
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  [(ngModel)]="nome"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="cadastroEmail">Email</label>
+                <input
+                  type="email"
+                  id="cadastroEmail"
+                  name="cadastroEmail"
+                  [(ngModel)]="email"
+                  required
+                  email
+                  #emailInput="ngModel"
+                />
+                <div
+                  *ngIf="emailInput.invalid && emailInput.touched"
+                  class="error-message"
+                >
+                  Por favor, insira um email válido.
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="registerPassword">Senha</label>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  name="registerPassword"
+                  [(ngModel)]="senha"
+                  (ngModelChange)="validarSenha()"
+                  required
+                />
+                <div *ngIf="senha.length > 0" class="password-feedback">
+                  <ul>
+                    <li [class.ok]="senhaMinima">Mínimo 8 caracteres</li>
+                    <li [class.ok]="senhaMaiuscula">
+                      Ao menos 1 letra maiúscula
+                    </li>
+                    <li [class.ok]="senhaMinuscula">
+                      Ao menos 1 letra minúscula
+                    </li>
+                    <li [class.ok]="senhaNumero">Ao menos 1 número</li>
+                    <li [class.ok]="senhaEspecial">
+                      Ao menos 1 caractere especial
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="confirmarSenha">Confirmar Senha</label>
+                <input
+                  type="password"
+                  id="confirmarSenha"
+                  name="confirmarSenha"
+                  [(ngModel)]="confirmarSenha"
+                  (ngModelChange)="validarConfirmarSenha()"
+                  required
+                />
+                <div
+                  *ngIf="confirmarSenha.length > 0 && !confirmaSenhaValida"
+                  class="error-message"
+                >
+                  As senhas não coincidem.
+                </div>
+              </div>
+            </div>
+
+            <button class="btn" type="submit">
+              {{ isLogin ? "Entrar" : "Criar Conta" }}
+            </button>
+          </form>
+
+          <div class="toggle-link">
+            <p>
+              {{ isLogin ? "Ainda não tem conta?" : "Já tem uma conta?" }}
+              <button (click)="toggleForm()">
+                Clique aqui
+                {{ isLogin ? "para se cadastrar" : "para fazer login" }}
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
