@@ -1,0 +1,189 @@
+.planos-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.planos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.planos-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #006644;
+}
+
+.planos-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  background-color: #e2e8f0;
+  color: #1e293b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn:hover {
+  background-color: #cbd5e1;
+}
+
+.btn-primary {
+  background-color: #006644;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #00533a;
+}
+
+.icon {
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.dialog-content {
+  background: #ffffff;
+  padding: 24px 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dialog-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+}
+
+.dialog-description {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.dialog-content label {
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+  color: #334155;
+}
+
+.dialog-content input,
+.dialog-content select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.planos-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .planos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .planos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.plano-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border-left: 6px solid #006644;
+  border: 1px solid #cbd5e1;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #006644;
+}
+
+.card-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 8px;
+  color: #475569;
+}
+
+.card-actions button:hover {
+  color: #1e293b;
+}
+
+.card-value {
+  margin-top: 12px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #475569;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
