@@ -1,3 +1,116 @@
 <app-header></app-header>
 
-<p>beneficiario works!</p>
+<div class="planos-container">
+  <div class="planos-header">
+    <div>
+      <h1 class="planos-title">Beneficiários</h1>
+      <p class="planos-subtitle">Cadastre e gerencie os beneficiários</p>
+    </div>
+    <button class="btn btn-primary" (click)="openDialog()">
+      <span class="icon">+</span>
+      Novo Beneficiário
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div class="dialog" *ngIf="isDialogOpen">
+    <div class="dialog-content">
+      <h2 class="dialog-title">
+        {{ editingBeneficiario ? "Editar Beneficiário" : "Novo Beneficiário" }}
+      </h2>
+      <p class="dialog-description">
+        {{
+          editingBeneficiario
+            ? "Atualize os dados do beneficiário."
+            : "Preencha os campos para cadastrar."
+        }}
+      </p>
+
+      <form (ngSubmit)="handleSubmit()">
+        <label for="nome">Nome *</label>
+        <input
+          id="nome"
+          name="nome"
+          [(ngModel)]="formData.nome"
+          required
+          placeholder="Ex: João Silva"
+        />
+
+        <label for="cpf">CPF *</label>
+        <input
+          id="cpf"
+          name="cpf"
+          [(ngModel)]="formData.cpf"
+          required
+          placeholder="Ex: 000.000.000-00"
+        />
+
+        <label for="email">Email *</label>
+        <input
+          id="email"
+          name="email"
+          [(ngModel)]="formData.email"
+          required
+          type="email"
+          placeholder="Ex: joao@email.com"
+        />
+
+        <label for="idade">Idade *</label>
+        <input
+          id="idade"
+          name="idade"
+          [(ngModel)]="formData.idade"
+          required
+          type="number"
+          min="0"
+          placeholder="Ex: 30"
+        />
+
+        <label for="plano">Plano (opcional)</label>
+        <select id="plano" name="plano" [(ngModel)]="formData.planoId">
+          <option [value]="null">Nenhum</option>
+          <option *ngFor="let plano of planos" [value]="plano.id">
+            {{ plano.nome }} - R$ {{ plano.valor.toFixed(2) }}
+          </option>
+        </select>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn" (click)="closeDialog()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            {{ editingBeneficiario ? "Atualizar" : "Cadastrar" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lista de Beneficiários -->
+  <div class="planos-grid">
+    <div class="plano-card" *ngFor="let b of beneficiarios">
+      <div class="card-header">
+        <div class="card-title">{{ b.nome }}</div>
+        <div class="card-actions">
+          <button (click)="editBeneficiario(b)">Editar</button>
+          <button (click)="deleteBeneficiario(b.id)">Excluir</button>
+        </div>
+      </div>
+      <div class="card-value">CPF: {{ b.cpf }}</div>
+      <div class="card-value">Idade: {{ b.idade }}</div>
+      <div class="card-value">
+        Plano: {{ getPlanoNome(b.planoId) || "Nenhum" }}
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="beneficiarios.length === 0">
+    <div class="empty-icon">;-;</div>
+    <h3>Nenhum beneficiário cadastrado</h3>
+    <p>Comece cadastrando seu primeiro beneficiário no sistema.</p>
+    <button class="btn btn-primary" (click)="openDialog()">
+      <span class="icon">+</span>
+      Cadastrar Beneficiário
+    </button>
+  </div>
+</div>
