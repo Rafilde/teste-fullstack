@@ -86,21 +86,19 @@
   </div>
 
   <div class="planos-grid">
-  <div class="plano-card" *ngFor="let b of beneficiarios">
-    <div class="card-header">
-      <div class="card-title">{{ b.name }}</div>
-      <div class="card-actions">
-        <button (click)="openDialog(b)">Editar</button>
-        <button (click)="deleteBeneficiario(b.id)">Excluir</button>
+    <div class="plano-card" *ngFor="let b of beneficiarios">
+      <div class="card-header">
+        <div class="card-title">{{ b.name }}</div>
+        <div class="card-actions">
+          <button (click)="openDialog(b)">Editar</button>
+          <button (click)="deleteBeneficiario(b.id)">Excluir</button>
+        </div>
       </div>
-    </div>
-    <div class="card-value">CPF: {{ b.cpf }}</div>
-    <div class="card-value">Idade: {{ b.age }}</div>
-    <div class="card-value">
-      Plano: {{ getPlanoNome(b.plan) }}
+      <div class="card-value">CPF: {{ b.cpf }}</div>
+      <div class="card-value">Idade: {{ b.age }}</div>
+      <div class="card-value">Plano: {{ getPlanoNome(b.plan) }}</div>
     </div>
   </div>
-</div>
 
   <div class="empty-state" *ngIf="beneficiarios.length === 0">
     <div class="empty-icon">;-;</div>
