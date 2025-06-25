@@ -1,59 +1,59 @@
-# Frontend
+# Interface de Gerenciamento Unimed - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+Esta é a aplicação frontend do projeto de teste para desenvolvedor full-stack. Desenvolvida com Angular, ela consome a API backend para fornecer uma interface de usuário para login, cadastro e gerenciamento de planos e beneficiários.
 
-## Development server
+## 🚀 Tecnologias Utilizadas
 
-To start a local development server, run:
+- **Angular 17+**: Framework principal para a construção da interface.
+- **TypeScript**: Linguagem de programação utilizada.
+- **HTML5 & CSS3**: Para a estrutura e estilização das páginas.
+- **Angular Router**: Para a navegação entre as páginas da aplicação.
+- **Angular Forms**: Para a criação e validação de formulários.
+- **Angular HttpClient**: Para a comunicação com a API REST do backend.
 
-```bash
-ng serve
-```
+## 📋 Funcionalidades Implementadas
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Interface de Autenticação**:
+  - Formulário unificado para **Login** e **Cadastro** de usuários.
+  - Validação de campos em tempo real (formato do email, requisitos de senha, etc.).
+- **Comunicação com a API**:
+  - Um `AuthService` centraliza a lógica de comunicação com os endpoints `/register` e `/login` do backend.
+- **Gerenciamento de Token (JWT)**:
+  - Após o login, o token JWT recebido é armazenado no `localStorage` do navegador.
+  - *(A ser implementado: um `HttpInterceptor` para adicionar o token automaticamente em todas as requisições para rotas protegidas).*
+- **Proteção de Rotas (Route Guards)**:
+  - Um `AuthGuard` verifica se o usuário está logado (se existe um token) antes de permitir o acesso a rotas protegidas (Dashboard, Planos, Beneficiários).
+  - Caso o usuário não esteja logado, ele é automaticamente redirecionado para a página de login.
+- **Funcionalidade de Logout**:
+  - Remove o token do `localStorage` e redireciona o usuário para a página de login.
 
-## Code scaffolding
+## ⚙️ Como Executar o Projeto
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Pré-requisitos
+- Node.js e npm instalados.
+- Angular CLI instalado (`npm install -g @angular/cli`).
+- Backend (API) rodando em `http://localhost:8080`.
 
-```bash
-ng generate component component-name
-```
+### Passos para a Execução
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1.  **Instalar as Dependências:**
+    - Navegue até a pasta raiz do frontend no seu terminal.
+    - Execute o comando:
+      ```bash
+      npm install
+      ```
 
-```bash
-ng generate --help
-```
+2.  **Iniciar a Aplicação de Desenvolvimento:**
+    - No mesmo terminal, execute o comando:
+      ```bash
+      ng serve
+      ```
+    - A aplicação estará disponível no seu navegador em `http://localhost:4200`.
 
-## Building
+## 🏛️ Estrutura de Pastas
 
-To build the project run:
+O projeto segue uma estrutura organizada para facilitar a manutenção:
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `src/app/core`: Contém a lógica central da aplicação (services, guards, interceptors).
+- `src/app/pages`: Contém os componentes que representam as páginas principais (Auth, Dashboard, etc.).
+- `src/app/shared`: Contém componentes, diretivas ou pipes que são reutilizados em toda a aplicação.
