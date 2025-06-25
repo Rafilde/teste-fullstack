@@ -17,19 +17,20 @@ import { User } from '../../shared/models/user.model';
 export class AuthComponent {
   isLogin = true;
 
-  senhaMinima = false;
-  senhaMaiuscula = false;
-  senhaMinuscula = false;
-  senhaNumero = false;
-  senhaEspecial = false;
+  hasMinLength = false;
+  hasUppercase = false;
+  hasLowercase = false;
+  hasNumber = false;
+  hasSpecialChar = false;
 
-  senhaValida = false;
-  confirmaSenhaValida = true;
+  isPasswordValid = false;
+  isConfirmPasswordValid = true;
 
-  nome = '';
+  // Form fields
+  name = '';
   email = '';
-  senha = '';
-  confirmarSenha = '';
+  password = '';
+  confirmPassword = '';
 
   toggleForm() {
     this.isLogin = !this.isLogin;
@@ -37,34 +38,34 @@ export class AuthComponent {
   }
 
   resetFields() {
-    this.nome = '';
+    this.name = '';
     this.email = '';
-    this.senha = '';
-    this.confirmarSenha = '';
-    this.senhaValida = false;
-    this.confirmaSenhaValida = true;
+    this.password = '';
+    this.confirmPassword = '';
+    this.isPasswordValid = false;
+    this.isConfirmPasswordValid = true;
   }
 
   validarSenha() {
-    const senha = this.senha || '';
-    this.senhaMinima = senha.length >= 8;
-    this.senhaMaiuscula = /[A-Z]/.test(senha);
-    this.senhaMinuscula = /[a-z]/.test(senha);
-    this.senhaNumero = /[0-9]/.test(senha);
-    this.senhaEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    const senha = this.password || '';
+    this.hasMinLength = senha.length >= 8;
+    this.hasUppercase = /[A-Z]/.test(senha);
+    this.hasLowercase = /[a-z]/.test(senha);
+    this.hasNumber = /[0-9]/.test(senha);
+    this.hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
 
-    this.senhaValida =
-      this.senhaMinima &&
-      this.senhaMaiuscula &&
-      this.senhaMinuscula &&
-      this.senhaNumero &&
-      this.senhaEspecial;
+    this.isPasswordValid =
+      this.hasMinLength &&
+      this.hasUppercase &&
+      this.hasLowercase &&
+      this.hasNumber &&
+      this.hasSpecialChar;
 
     this.validarConfirmarSenha();
   }
 
   validarConfirmarSenha() {
-    this.confirmaSenhaValida = this.senha === this.confirmarSenha;
+    this.isConfirmPasswordValid = this.password === this.confirmPassword;
   }
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -78,7 +79,7 @@ export class AuthComponent {
   }
 
   handleLogin() {
-    if (!this.email || !this.senha) {
+    if (!this.email || !this.password) {
       alert('Por favor, preencha email e senha.');
       return;
     }
@@ -91,7 +92,7 @@ export class AuthComponent {
 
     const credentials: LoginCredentials = {
       email: this.email,
-      password: this.senha,
+      password: this.password,
     };
 
     this.authService.login(credentials).subscribe({
@@ -108,7 +109,7 @@ export class AuthComponent {
   }
 
   handleRegister() {
-    if (!this.nome || !this.email || !this.senha) {
+    if (!this.name || !this.email || !this.password) {
       alert('Por favor, preencha todos os campos.');
       return;
     }
@@ -120,9 +121,9 @@ export class AuthComponent {
     }
 
     const userData: User = {
-      name: this.nome,
+      name: this.name,
       email: this.email,
-      password: this.senha,
+      password: this.password,
     };
 
     this.authService.register(userData).subscribe({

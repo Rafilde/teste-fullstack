@@ -52,7 +52,7 @@
                   type="password"
                   id="senha"
                   name="senha"
-                  [(ngModel)]="senha"
+                  [(ngModel)]="password"
                   required
                 />
               </div>
@@ -66,7 +66,7 @@
                   type="text"
                   id="nome"
                   name="nome"
-                  [(ngModel)]="nome"
+                  [(ngModel)]="name"
                   required
                 />
               </div>
@@ -96,21 +96,21 @@
                   type="password"
                   id="registerPassword"
                   name="registerPassword"
-                  [(ngModel)]="senha"
+                  [(ngModel)]="password"
                   (ngModelChange)="validarSenha()"
                   required
                 />
-                <div *ngIf="senha.length > 0" class="password-feedback">
+                <div *ngIf="password.length > 0" class="password-feedback">
                   <ul>
-                    <li [class.ok]="senhaMinima">Mínimo 8 caracteres</li>
-                    <li [class.ok]="senhaMaiuscula">
+                    <li [class.ok]="hasMinLength">Mínimo 8 caracteres</li>
+                    <li [class.ok]="hasUppercase">
                       Ao menos 1 letra maiúscula
                     </li>
-                    <li [class.ok]="senhaMinuscula">
+                    <li [class.ok]="hasLowercase">
                       Ao menos 1 letra minúscula
                     </li>
-                    <li [class.ok]="senhaNumero">Ao menos 1 número</li>
-                    <li [class.ok]="senhaEspecial">
+                    <li [class.ok]="hasNumber">Ao menos 1 número</li>
+                    <li [class.ok]="hasSpecialChar">
                       Ao menos 1 caractere especial
                     </li>
                   </ul>
@@ -123,12 +123,12 @@
                   type="password"
                   id="confirmarSenha"
                   name="confirmarSenha"
-                  [(ngModel)]="confirmarSenha"
+                  [(ngModel)]="confirmPassword"
                   (ngModelChange)="validarConfirmarSenha()"
                   required
                 />
                 <div
-                  *ngIf="confirmarSenha.length > 0 && !confirmaSenhaValida"
+                  *ngIf="confirmPassword.length > 0 && !isConfirmPasswordValid"
                   class="error-message"
                 >
                   As senhas não coincidem.
