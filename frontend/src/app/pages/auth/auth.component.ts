@@ -2,10 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataViewModule } from 'primeng/dataview';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { LoginCredentials } from '../../shared/models/login-credentials.model';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-auth',
-  imports: [CommonModule, FormsModule, DataViewModule],
+  imports: [CommonModule, FormsModule, DataViewModule, HttpClientModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -62,42 +67,78 @@ export class AuthComponent {
     this.confirmaSenhaValida = this.senha === this.confirmarSenha;
   }
 
+  constructor(private authService: AuthService, private router: Router) {}
+
   handleSubmit() {
     if (this.isLogin) {
-      if (!this.email || !this.senha) {
-        alert('Por favor, preencha email e senha.');
-        return;
-      }
-      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
-      if (!emailValido) {
-        alert('Por favor, insira um email válido.');
-        return;
-      }
-      alert('Fazer login com:');
+      this.handleLogin();
     } else {
-      this.validarSenha();
-      this.validarConfirmarSenha();
-
-      if (!this.nome || !this.email || !this.senha || !this.confirmarSenha) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-
-      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
-      if (!emailValido) {
-        alert('Por favor, insira um email válido.');
-        return;
-      }
-
-      if (!this.senhaValida) {
-        alert('A senha não atende aos requisitos mínimos.');
-        return;
-      }
-      if (!this.confirmaSenhaValida) {
-        alert('As senhas não coincidem!');
-        return;
-      }
-      alert('Cadastrar:');
+      this.handleRegister();
     }
+  }
+
+  handleLogin() {
+    if (!this.email || !this.senha) {
+      alert('Por favor, preencha email e senha.');
+      return;
+    }
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+    if (!emailValido) {
+      alert('Por favor, insira um email válido.');
+      return;
+    }
+
+    const credentials: LoginCredentials = {
+      email: this.email,
+      password: this.senha,
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login com sucesso!', response);
+        localStorage.setItem('authToken', response.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Erro no login:', err);
+        alert('Email ou senha inválidos. Por favor, tente novamente.');
+      },
+    });
+  }
+
+  handleRegister() {
+    if (!this.nome || !this.email || !this.senha) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+    if (!emailValido) {
+      alert('Por favor, insira um email válido.');
+      return;
+    }
+
+    const userData: User = {
+      name: this.nome,
+      email: this.email,
+      password: this.senha,
+    };
+
+    this.authService.register(userData).subscribe({
+      next: (response) => {
+        console.log('Cadastro realizado com sucesso!', response);
+        alert('Cadastro realizado! Agora você pode fazer o login.');
+        this.toggleForm();
+      },
+      error: (err) => {
+        console.error('Erro no cadastro:', err);
+        if (err.status === 409) {
+          alert('Este email já está em uso.');
+        } else {
+          alert('Ocorreu um erro no cadastro. Tente novamente.');
+        }
+      },
+    });
   }
 }

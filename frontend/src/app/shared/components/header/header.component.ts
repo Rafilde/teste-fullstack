@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -11,15 +12,15 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   sidebarOpen = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+  
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
   logout() {
-    alert('Você saiu!');
-    this.router.navigate(['/login']);
+     this.authService.logout();
   }
 }
 
