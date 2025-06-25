@@ -1,8 +1,10 @@
+import { Plan } from "./plan.model";
+
 export interface Beneficiary {
-  id: number;
+  id?: number;
   name: string;
   cpf: string;
   email: string;
   age: number;
-  planId: number | null; 
+  plan: Plan | null;
 }

@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Plan } from '../../shared/models/plan.model';
 import { PlanService } from '../../core/services/plan.service';
+import { Beneficiary } from '../../shared/models/beneficiary.model';
+import { BeneficiaryService } from '../../core/services/beneficiary.service';
 
 @Component({
   selector: 'app-beneficiario',
@@ -13,99 +15,102 @@ import { PlanService } from '../../core/services/plan.service';
 })
 export class BeneficiarioComponent implements OnInit {
   isDialogOpen = false;
-  editingBeneficiario: any = null;
-
+  editingBeneficiario: Beneficiary | null = null;
   planos: Plan[] = [];
+  beneficiarios: Beneficiary[] = [];
 
-  beneficiarios: any[] = [];
-
-  formData = {
+  formData: {
+    name: string;
+    cpf: string;
+    email: string;
+    age: number | null;
+    planId: number | null; 
+  } = {
     name: '',
     cpf: '',
     email: '',
     age: null,
-    planoId: null,
+    planId: null,
   };
 
-  constructor(private planService: PlanService) {}
+  constructor(
+    private planService: PlanService,
+    private beneficiaryService: BeneficiaryService
+  ) {}
 
   ngOnInit(): void {
     this.loadPlanos();
+    this.loadBeneficiarios();
   }
 
   loadPlanos(): void {
-    this.planService.getPlans().subscribe({
-      next: (planosData) => {
-        this.planos = planosData;
-        console.log('Planos carregados com sucesso:', this.planos);
-      },
-      error: (erro) => {
-        console.error('Falha ao carregar os planos', erro);
-      },
-    });
+    this.planService.getPlans().subscribe(data => this.planos = data);
   }
 
-  openDialog(b: any = null) {
-    this.isDialogOpen = true;
+  loadBeneficiarios(): void {
+    this.beneficiaryService.getBeneficiaries().subscribe(data => this.beneficiarios = data);
+  }
 
-    if (b) {
-      this.editingBeneficiario = b;
-      this.formData = { ...b };
+  openDialog(beneficiary: Beneficiary | null = null) {
+    this.isDialogOpen = true;
+    if (beneficiary) {
+      this.editingBeneficiario = beneficiary;
+      this.formData = {
+        name: beneficiary.name,
+        cpf: beneficiary.cpf,
+        email: beneficiary.email,
+        age: beneficiary.age,
+        planId: (beneficiary.plan && beneficiary.plan.id) || null
+      };
     } else {
       this.editingBeneficiario = null;
-      this.formData = {
-        name: '',
-        cpf: '',
-        email: '',
-        age: null,
-        planoId: null,
-      };
+      this.formData = { name: '', cpf: '', email: '', age: null, planId: null };
     }
   }
 
   closeDialog() {
     this.isDialogOpen = false;
-    this.editingBeneficiario = null;
-    this.formData = {
-      name: '',
-      cpf: '',
-      email: '',
-      age: null,
-      planoId: null,
-    };
   }
 
   handleSubmit() {
-    if (this.editingBeneficiario) {
-      const index = this.beneficiarios.findIndex(
-        (b) => b.id === this.editingBeneficiario.id
-      );
-      if (index > -1) {
-        this.beneficiarios[index] = {
-          ...this.formData,
-          id: this.editingBeneficiario.id,
-        };
-      }
-    } else {
-      const newId = this.beneficiarios.length
-        ? Math.max(...this.beneficiarios.map((b) => b.id)) + 1
-        : 1;
-      this.beneficiarios.push({ ...this.formData, id: newId });
+    if (!this.formData.name || !this.formData.cpf || !this.formData.email || !this.formData.age) {
+      alert('Preencha os campos obrigatórios.');
+      return;
     }
+    
+    const dataToSend = {
+      name: this.formData.name,
+      cpf: this.formData.cpf,
+      email: this.formData.email,
+      age: this.formData.age,
+      plan: this.formData.planId ? { id: this.formData.planId } : null
+    };
 
-    this.closeDialog();
+    if (this.editingBeneficiario && this.editingBeneficiario.id) {
+      this.beneficiaryService.updateBeneficiary(this.editingBeneficiario.id, dataToSend)
+        .subscribe(() => {
+          this.loadBeneficiarios();
+          this.closeDialog();
+        });
+    } else {
+      this.beneficiaryService.createBeneficiary(dataToSend)
+        .subscribe(() => {
+          this.loadBeneficiarios();
+          this.closeDialog();
+        });
+    }
   }
 
-  editBeneficiario(b: any) {
-    this.openDialog(b);
+  deleteBeneficiario(id: number | undefined) {
+    if (id === undefined) return;
+    if (confirm('Tem certeza que deseja excluir?')) {
+      this.beneficiaryService.deleteBeneficiary(id).subscribe(() => {
+        this.loadBeneficiarios();
+      });
+    }
   }
 
-  deleteBeneficiario(id: number) {
-    this.beneficiarios = this.beneficiarios.filter((b) => b.id !== id);
-  }
-
-  getPlanoNome(planoId: number | null): string | null {
-    const plano = this.planos.find((p) => p.id === planoId);
-    return plano ? plano.name : null;
+  getPlanoNome(plan: Plan | null): string {
+    return plan ? plan.name : 'Nenhum';
   }
 }
