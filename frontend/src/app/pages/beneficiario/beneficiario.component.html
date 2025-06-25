@@ -31,7 +31,7 @@
         <input
           id="nome"
           name="nome"
-          [(ngModel)]="formData.nome"
+          [(ngModel)]="formData.name"
           required
           placeholder="Ex: João Silva"
         />
@@ -59,7 +59,7 @@
         <input
           id="idade"
           name="idade"
-          [(ngModel)]="formData.idade"
+          [(ngModel)]="formData.age"
           required
           type="number"
           min="0"
@@ -70,7 +70,7 @@
         <select id="plano" name="plano" [(ngModel)]="formData.planoId">
           <option [value]="null">Nenhum</option>
           <option *ngFor="let plano of planos" [value]="plano.id">
-            {{ plano.nome }} - R$ {{ plano.valor.toFixed(2) }}
+            {{ plano.name }} - R$ {{ plano.value.toFixed(2) }}
           </option>
         </select>
 
