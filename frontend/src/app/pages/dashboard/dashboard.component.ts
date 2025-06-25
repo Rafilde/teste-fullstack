@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataViewModule } from 'primeng/dataview';
 import { HeaderComponent } from "../../shared/components/header/header.component";
+import { PlanService } from '../../core/services/plan.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +11,25 @@ import { HeaderComponent } from "../../shared/components/header/header.component
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+  totalNumberOfPlans: number = 0;
+  totalNumberOfBeneficiaries: number = 0; 
+
+  constructor(private planService: PlanService) {}
+
+  ngOnInit(): void {
+    this.loadDatasDashboard();
+  }
+
+  loadDatasDashboard(): void {
+    this.planService.getPlans().subscribe({
+      next: (planos) => {
+        this.totalNumberOfPlans = planos.length;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar os dados dos planos:', err);
+      }
+    });
+  }
 
 }
