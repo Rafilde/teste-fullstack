@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpInterceptorFn } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginCredentials } from '../../shared/models/login-credentials.model';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private readonly API = `${environment.apiUrl}/auth`;
 
@@ -31,3 +32,14 @@ export class AuthService {
     return !!localStorage.getItem('authToken');
   }
 }
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    const cloned = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`),
+    });
+    return next(cloned);
+  }
+  return next(req);
+};

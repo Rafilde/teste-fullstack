@@ -23,10 +23,10 @@
 
       <form (ngSubmit)="handleSubmit()">
         <label for="nome">Nome do Plano *</label>
-        <input id="nome" [(ngModel)]="formData.nome" name="nome" required placeholder="Ex: Plano Básico" />
+        <input id="nome" [(ngModel)]="formData.name" name="nome" required placeholder="Ex: Plano Básico" />
 
         <label for="valor">Valor (R$) *</label>
-        <input id="valor" type="number" [(ngModel)]="formData.valor" name="valor" min="0" step="0.01" required placeholder="Ex: 150.00" />
+        <input id="valor" type="number" [(ngModel)]="formData.value" name="valor" min="0" step="0.01" required placeholder="Ex: 150.00" />
 
         <div class="dialog-actions">
           <button type="button" class="btn" (click)="closeDialog()">Cancelar</button>
@@ -40,13 +40,13 @@
   <div class="planos-grid">
     <div class="plano-card" *ngFor="let plano of planos">
       <div class="card-header">
-        <div class="card-title">{{ plano.nome }}</div>
+        <div class="card-title">{{ plano.name }}</div>
         <div class="card-actions">
           <button (click)="editPlano(plano)" title="Editar">Editar</button>
           <button (click)="deletePlano(plano.id)" title="Excluir">Excluir</button>
         </div>
       </div>
-      <div class="card-value">R$ {{ plano.valor.toFixed(2) }}</div>
+      <div class="card-value">R$ {{ plano.value.toFixed(2) }}</div>
     </div>
   </div>
 

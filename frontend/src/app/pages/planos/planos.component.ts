@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../shared/components/header/header.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataViewModule } from 'primeng/dataview';
+import { Plan } from '../../shared/models/plan.model';
+import { PlanService } from '../../core/services/plan.service';
 
 @Component({
   selector: 'app-planos',
@@ -10,78 +12,87 @@ import { DataViewModule } from 'primeng/dataview';
   templateUrl: './planos.component.html',
   styleUrl: './planos.component.css'
 })
-export class PlanosComponent {
- isDialogOpen = false;
-  editingPlano: any = null;
+export class PlanosComponent implements OnInit {
+  isDialogOpen = false;
+  editingPlano: Plan | null = null;
+  planos: Plan[] = [];
 
-  planos: any[] = [
-  { id: 1, nome: 'Multiplan', valor: 120.00 },
-  { id: 2, nome: 'Salute Max', valor: 180.50 },
-  { id: 3, nome: 'Salute Uni', valor: 250.00 }
-];
-
-
-  formData = {
-    nome: '',
-    valor: null
+  formData: { name: string; value: number | null } = {
+    name: '',
+    value: null
   };
 
-openDialog(plano?: any) {
-  this.isDialogOpen = true;
+  constructor(private planService: PlanService) {}
 
-  if (plano) {
-    this.editingPlano = plano;
-    this.formData = {
-      nome: plano.nome,
-      valor: plano.valor
-    };
-  } else {
-
-    this.editingPlano = null;
-    this.formData = {
-      nome: '',
-      valor: null
-    };
+  ngOnInit(): void {
+    this.loadPlans();
   }
-}
 
-closeDialog() {
-  this.isDialogOpen = false;
-  this.editingPlano = null;
-  this.formData = {
-    nome: '',
-    valor: null
-  };
-}
-
-handleSubmit() {
-  if (this.editingPlano) {
-    const index = this.planos.findIndex(p => p.id === this.editingPlano.id);
-    if (index > -1) {
-      this.planos[index] = {
-        ...this.editingPlano,
-        nome: this.formData.nome,
-        valor: this.formData.valor
-      };
-    }
-  } else {
-    const newId = this.planos.length ? Math.max(...this.planos.map(p => p.id)) + 1 : 1;
-    this.planos.push({
-      id: newId,
-      nome: this.formData.nome,
-      valor: this.formData.valor
+  loadPlans(): void {
+    this.planService.getPlans().subscribe({
+      next: (data) => this.planos = data,
+      error: (err) => console.error('Erro ao carregar planos', err)
     });
   }
 
-  this.closeDialog();
-}
+  openDialog(plano?: Plan) {
+    this.isDialogOpen = true;
+    if (plano) {
+      this.editingPlano = plano;
+      this.formData = { ...plano }; 
+    } else {
+      this.editingPlano = null;
+      this.formData = { name: '', value: null };
+    }
+  }
 
-editPlano(plano: any) {
-  this.openDialog(plano);
-}
+  closeDialog() {
+    this.isDialogOpen = false;
+  }
 
-deletePlano(id: number) {
-  this.planos = this.planos.filter(p => p.id !== id);
-}
+  handleSubmit() {
+    if (!this.formData.name || this.formData.value === null) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
 
+    const planData: Plan = {
+      name: this.formData.name,
+      value: this.formData.value
+    };
+
+    if (this.editingPlano) {
+      this.planService.updatePlan(this.editingPlano.id!, planData).subscribe({
+        next: () => {
+          this.loadPlans(); 
+          this.closeDialog();
+        },
+        error: (err) => console.error('Erro ao atualizar plano', err)
+      });
+    } else {
+      this.planService.createPlan(planData).subscribe({
+        next: () => {
+          this.loadPlans(); 
+          this.closeDialog();
+        },
+        error: (err) => console.error('Erro ao criar plano', err)
+      });
+    }
+  }
+
+  editPlano(plano: Plan) {
+    this.openDialog(plano);
+  }
+
+  deletePlano(id: number | undefined) {
+    if (id === undefined) return;
+    if (confirm('Tem certeza que deseja excluir este plano?')) {
+      this.planService.deletePlan(id).subscribe({
+        next: () => {
+          this.loadPlans();
+        },
+        error: (err) => console.error('Erro ao excluir plano', err)
+      });
+    }
+  }
 }
